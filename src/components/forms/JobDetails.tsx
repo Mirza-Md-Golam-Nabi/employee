@@ -1,0 +1,159 @@
+"use client";
+import { useFormContext } from "react-hook-form";
+import { JobDetailsType } from "@/lib/validation/jobDetails";
+import { DEPARTMENTS, mockManagers } from "@/data/mockData";
+
+export default function JobDetails() {
+  const {
+    register,
+    watch,
+    formState: { errors },
+  } = useFormContext<JobDetailsType>();
+
+  const department = watch("department");
+  const jobType = watch("jobType");
+
+  const filteredManagers = mockManagers.filter(
+    (m) => m.department === department
+  );
+
+  return (
+    <div className="space-y-4">
+      <h2 className="text-xl font-semibold text-gray-900">
+        Step 2 — Job Details
+      </h2>
+
+      {/* Department */}
+      <div>
+        <label className="block text-sm font-medium text-gray-800">
+          Department
+        </label>
+        <select
+          {...register("department")}
+          className="mt-1 w-full border rounded-md p-2"
+        >
+          <option value="">Select Department</option>
+          {DEPARTMENTS.map((department) => (
+            <option key={department} value={department}>
+              {department}
+            </option>
+          ))}
+        </select>
+        {errors.department && (
+          <p className="text-red-500 text-sm">
+            {String(errors.department.message)}
+          </p>
+        )}
+      </div>
+
+      {/* Job Title */}
+      <div>
+        <label
+          htmlFor="jobTitle"
+          className="block text-sm font-medium text-gray-800"
+        >
+          Position Title
+        </label>
+        <input
+          id="jobTitle"
+          {...register("jobTitle")}
+          className="mt-1 w-full border rounded-md p-2"
+          placeholder="Software Engineer"
+        />
+        {errors.jobTitle && (
+          <p className="text-red-500 text-sm">
+            {String(errors.jobTitle.message)}
+          </p>
+        )}
+      </div>
+
+      {/* Start Date */}
+      <div>
+        <label className="block text-sm font-medium text-gray-800">
+          Start Date
+        </label>
+        <input
+          type="date"
+          {...register("startDate")}
+          className="mt-1 w-full border rounded-md p-2"
+        />
+        {errors.startDate && (
+          <p className="text-red-500 text-sm">
+            {String(errors.startDate.message)}
+          </p>
+        )}
+      </div>
+
+      {/* Job Type */}
+      <div>
+        <label className="block text-sm font-medium text-gray-800">
+          Job Type
+        </label>
+        <div className="flex gap-4 mt-1">
+          <label>
+            <input type="radio" value="Full-time" {...register("jobType")} />{" "}
+            Full-time
+          </label>
+          <label>
+            <input type="radio" value="Part-time" {...register("jobType")} />{" "}
+            Part-time
+          </label>
+          <label>
+            <input type="radio" value="Contract" {...register("jobType")} />{" "}
+            Contract
+          </label>
+        </div>
+        {errors.jobType && (
+          <p className="text-red-500 text-sm">
+            {String(errors.jobType.message)}
+          </p>
+        )}
+      </div>
+
+      {/* Salary */}
+      {(jobType === "Full-time" || jobType === "Contract") && (
+        <div>
+          <label className="block text-sm font-medium text-gray-800">
+            {jobType === "Full-time" ? "Annual Salary ($)" : "Hourly Rate ($)"}
+          </label>
+          <input
+            type="number"
+            {...register("salary", { valueAsNumber: true })}
+            className="mt-1 w-full border rounded-md p-2"
+            placeholder={jobType === "Full-time" ? "50000" : "100"}
+          />
+          {errors.salary && (
+            <p className="text-red-500 text-sm">
+              {String(errors.salary.message)}
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* Manager */}
+      {department && (
+        <div>
+          <label className="block text-sm font-medium text-gray-800">
+            Manager
+          </label>
+          <select
+            {...register("manager")}
+            className="mt-1 w-full border rounded-md p-2"
+          >
+            <option value="">Select Manager</option>
+            {filteredManagers.map((m) => (
+              <option key={m.id} value={m.id}>
+                {m.name}
+              </option>
+            ))}
+          </select>
+          {errors.manager && (
+            <p className="text-red-500 text-sm">
+              {String(errors.manager.message)}
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}

@@ -8,3 +8,8 @@ export const isAtLeast18 = (dob: string) => {
   }
   return age;
 };
+
+export const isWeekend = (date: Date) => {
+  const day = date.getDay(); // 0=Sun, 5=Fri, 6=Sat
+  return day === 5 || day === 6;
+};
