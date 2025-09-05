@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { isAtLeast18 } from "@/lib/helpers";
+import { isAtLeast18, isValidPhone } from "@/lib/helpers";
 
 export const personalInfo = z.object({
   fullName: z
@@ -12,7 +12,7 @@ export const personalInfo = z.object({
   phone: z
     .string()
     .min(1, { message: "Phone is required" })
-    .refine((val) => /^\+\d{1,3}-\d{3}-\d{3}-\d{4}$/.test(val), {
+    .refine((val) => isValidPhone(val), {
       message: "Invalid phone number. Format: +1-123-456-7890",
     }),
   dob: z

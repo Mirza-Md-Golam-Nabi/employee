@@ -25,6 +25,14 @@ export const DEPARTMENTS = [
 
 export const JOB_TYPES = ["Full-time", "Part-time", "Contract"] as const;
 
+export const RELATIONSHIP = [
+  "Parent",
+  "Sibling",
+  "Friend",
+  "Spouse",
+  "Relative",
+] as const;
+
 export const skillsByDepartment = {
   Engineering: [
     "JavaScript",

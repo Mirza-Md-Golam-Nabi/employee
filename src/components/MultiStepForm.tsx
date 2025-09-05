@@ -7,6 +7,8 @@ import PersonalInfo from "./forms/PersonalInfo";
 import JobDetails from "./forms/JobDetails";
 import { formSchema, FormSchemaType } from "@/lib/validation/formSchema";
 import SkillsPreferences from "./forms/SkillsPreferences";
+import EmergencyContact from "./forms/EmergencyContact";
+import { calculateAge } from "@/lib/helpers";
 
 export default function MultiStepForm() {
   const [step, setStep] = useState(1);
@@ -21,10 +23,13 @@ export default function MultiStepForm() {
       fullName: "John Doe",
       email: "john@example.com",
       phone: "+1-123-456-7890",
-      dob: "1990-01-01",
+      dob: "2004-01-01",
     },
     mode: "onTouched",
   });
+
+  const dob = methods.watch("dob");
+  const age = calculateAge(dob);
 
   const fieldsByStep: Record<number, (keyof FormSchemaType)[]> = {
     1: ["fullName", "email", "phone", "dob"],
@@ -37,6 +42,13 @@ export default function MultiStepForm() {
       "managerApproved",
       "extraNotes",
     ],
+    4: [
+      "contactName",
+      "relationship",
+      "contactPhone",
+      "guardianName",
+      "guardianPhone",
+    ],
   };
 
   const handleNext = async () => {
@@ -47,7 +59,7 @@ export default function MultiStepForm() {
   };
 
   const onSubmit = methods.handleSubmit((data) => {
-    if (step < 4) {
+    if (step < 5) {
       setStep((prev) => prev + 1);
     } else {
       console.log("Final Submitted Data:", data);
@@ -66,8 +78,11 @@ export default function MultiStepForm() {
         {/* Step 3 */}
         {step === 3 && <SkillsPreferences />}
 
-        {/* Step 4 - Review */}
-        {step === 4 && (
+        {/* Step 4 */}
+        {step === 4 && <EmergencyContact age={age} />}
+
+        {/* Step 5 - Review */}
+        {step === 5 && (
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">Review Your Info</h2>
             <pre className="bg-gray-100 p-4 rounded mt-2">
@@ -87,7 +102,7 @@ export default function MultiStepForm() {
               Back
             </button>
           )}
-          {step < 4 ? (
+          {step < 5 ? (
             <button
               type="button"
               onClick={handleNext}
