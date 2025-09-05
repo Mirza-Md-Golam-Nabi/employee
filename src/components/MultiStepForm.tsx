@@ -6,17 +6,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import PersonalInfo from "./forms/PersonalInfo";
 import JobDetails from "./forms/JobDetails";
 import { formSchema, FormSchemaType } from "@/lib/validation/formSchema";
+import SkillsPreferences from "./forms/SkillsPreferences";
 
 export default function MultiStepForm() {
   const [step, setStep] = useState(1);
 
   const methods = useForm<FormSchemaType>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema) as any,
     defaultValues: {
-      fullName: "",
-      email: "",
-      phone: "",
-      dob: "",
+      // fullName: "",
+      // email: "",
+      // phone: "",
+      // dob: "",
+      fullName: "John Doe",
+      email: "john@example.com",
+      phone: "+1-123-456-7890",
+      dob: "1990-01-01",
     },
     mode: "onTouched",
   });
@@ -24,6 +29,14 @@ export default function MultiStepForm() {
   const fieldsByStep: Record<number, (keyof FormSchemaType)[]> = {
     1: ["fullName", "email", "phone", "dob"],
     2: ["department", "jobTitle", "startDate", "jobType", "salary", "manager"],
+    3: [
+      "skills",
+      "experiences",
+      "workingHours",
+      "remotePreference",
+      "managerApproved",
+      "extraNotes",
+    ],
   };
 
   const handleNext = async () => {
@@ -34,8 +47,7 @@ export default function MultiStepForm() {
   };
 
   const onSubmit = methods.handleSubmit((data) => {
-    console.log("working");
-    if (step < 3) {
+    if (step < 4) {
       setStep((prev) => prev + 1);
     } else {
       console.log("Final Submitted Data:", data);
@@ -51,8 +63,11 @@ export default function MultiStepForm() {
         {/* Step 2 */}
         {step === 2 && <JobDetails />}
 
-        {/* Step 3 - Review */}
-        {step === 3 && (
+        {/* Step 3 */}
+        {step === 3 && <SkillsPreferences />}
+
+        {/* Step 4 - Review */}
+        {step === 4 && (
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">Review Your Info</h2>
             <pre className="bg-gray-100 p-4 rounded mt-2">
@@ -72,7 +87,7 @@ export default function MultiStepForm() {
               Back
             </button>
           )}
-          {step < 3 ? (
+          {step < 4 ? (
             <button
               type="button"
               onClick={handleNext}
