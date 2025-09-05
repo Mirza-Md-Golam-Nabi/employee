@@ -9,9 +9,11 @@ import { formSchema, FormSchemaType } from "@/lib/validation/formSchema";
 import SkillsPreferences from "./forms/SkillsPreferences";
 import EmergencyContact from "./forms/EmergencyContact";
 import { calculateAge } from "@/lib/helpers";
+import ReviewSubmit from "./forms/Review";
 
 export default function MultiStepForm() {
   const [step, setStep] = useState(1);
+  const [confirmed, setConfirmed] = useState(false);
 
   const methods = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema) as any,
@@ -62,6 +64,9 @@ export default function MultiStepForm() {
     if (step < 5) {
       setStep((prev) => prev + 1);
     } else {
+      alert(
+        "Submission successful! Open the console to view the submitted data."
+      );
       console.log("Final Submitted Data:", data);
     }
   });
@@ -82,13 +87,8 @@ export default function MultiStepForm() {
         {step === 4 && <EmergencyContact age={age} />}
 
         {/* Step 5 - Review */}
-        {step === 5 && (
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold">Review Your Info</h2>
-            <pre className="bg-gray-100 p-4 rounded mt-2">
-              {JSON.stringify(methods.getValues(), null, 2)}
-            </pre>
-          </div>
+        {step == 5 && (
+          <ReviewSubmit confirmed={confirmed} setConfirmed={setConfirmed} />
         )}
 
         {/* Navigation Buttons */}
@@ -102,7 +102,7 @@ export default function MultiStepForm() {
               Back
             </button>
           )}
-          {step < 5 ? (
+          {step < 4 ? (
             <button
               type="button"
               onClick={handleNext}
@@ -110,12 +110,25 @@ export default function MultiStepForm() {
             >
               Next
             </button>
+          ) : step == 4 ? (
+            <button
+              type="button"
+              onClick={handleNext}
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Review
+            </button>
           ) : (
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              disabled={!confirmed}
+              className={`px-4 py-2 rounded text-white ${
+                confirmed
+                  ? "bg-blue-600 hover:bg-blue-700"
+                  : "bg-gray-400 cursor-not-allowed"
+              }`}
             >
-              Final Submit
+              Submit
             </button>
           )}
         </div>
