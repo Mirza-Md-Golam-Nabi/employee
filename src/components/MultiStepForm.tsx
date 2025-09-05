@@ -74,19 +74,10 @@ export default function MultiStepForm() {
   return (
     <FormProvider {...methods}>
       <form onSubmit={onSubmit} className="max-w-2xl mx-auto p-6 space-y-6">
-        {/* Step 1 */}
         {step === 1 && <PersonalInfo />}
-
-        {/* Step 2 */}
         {step === 2 && <JobDetails />}
-
-        {/* Step 3 */}
         {step === 3 && <SkillsPreferences />}
-
-        {/* Step 4 */}
         {step === 4 && <EmergencyContact age={age} />}
-
-        {/* Step 5 - Review */}
         {step == 5 && (
           <ReviewSubmit confirmed={confirmed} setConfirmed={setConfirmed} />
         )}

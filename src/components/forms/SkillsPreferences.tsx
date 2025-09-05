@@ -18,6 +18,9 @@ export default function SkillsPreferences() {
 
   return (
     <div className="space-y-6">
+      <h2 className="text-xl font-semibold text-gray-900">
+        Step 3 — Skills & Preferences
+      </h2>
       {/* Skills */}
       <div>
         <label className="block text-sm font-medium text-gray-700">

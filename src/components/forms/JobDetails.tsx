@@ -1,7 +1,7 @@
 "use client";
 import { useFormContext } from "react-hook-form";
 import { JobDetailsType } from "@/lib/validation/jobDetails";
-import { DEPARTMENTS, mockManagers } from "@/data/mockData";
+import { DEPARTMENTS, JOB_TYPES, mockManagers } from "@/data/mockData";
 
 export default function JobDetails() {
   const {
@@ -90,23 +90,15 @@ export default function JobDetails() {
           Job Type
         </label>
         <div className="flex gap-4 mt-1">
-          <label>
-            <input type="radio" value="Full-time" {...register("jobType")} />{" "}
-            Full-time
-          </label>
-          <label>
-            <input type="radio" value="Part-time" {...register("jobType")} />{" "}
-            Part-time
-          </label>
-          <label>
-            <input type="radio" value="Contract" {...register("jobType")} />{" "}
-            Contract
-          </label>
+          {JOB_TYPES.map((type) => (
+            <label key={type}>
+              <input type="radio" value={type} {...register("jobType")} />{" "}
+              {type}
+            </label>
+          ))}
         </div>
         {errors.jobType && (
-          <p className="text-red-500 text-sm">
-            {String(errors.jobType.message)}
-          </p>
+          <p className="text-red-500 text-sm">{errors.jobType.message}</p>
         )}
       </div>
 

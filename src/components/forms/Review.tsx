@@ -2,14 +2,17 @@
 
 import { useFormContext } from "react-hook-form";
 import { FormSchemaType } from "@/lib/validation/formSchema";
-import { useState } from "react";
+import { mockManagers } from "@/data/mockData";
 
 type ReviewSubmitProps = {
   confirmed: boolean;
   setConfirmed: (val: boolean) => void;
 };
 
-export default function ReviewSubmit({ confirmed, setConfirmed }: ReviewSubmitProps) {
+export default function ReviewSubmit({
+  confirmed,
+  setConfirmed,
+}: ReviewSubmitProps) {
   const { getValues } = useFormContext<FormSchemaType>();
   const data = getValues();
 
@@ -37,11 +40,22 @@ export default function ReviewSubmit({ confirmed, setConfirmed }: ReviewSubmitPr
           <Field label="Start Date" value={data.startDate} />
           <Field label="Job Type" value={data.jobType} />
           <Field label="Salary" value={String(data.salary)} />
-          <Field label="Manager" value={data.manager} />
+          <Field
+            label="Manager"
+            value={mockManagers.find((m) => m.id === data.manager)?.name}
+          />
         </Section>
 
         <Section title="Skills & Preferences">
-          <Field label="Skills" value={data.skills?.join(", ")} />
+          <Field
+            label="Skills & Experience"
+            value={data.skills
+              ?.map(
+                (skill) => `${skill} (${data.experiences?.[skill] || 0} yrs)`
+              )
+              .join(", ")}
+          />
+
           <Field
             label="Working Hours"
             value={`${data.workingHours?.start || ""} - ${
