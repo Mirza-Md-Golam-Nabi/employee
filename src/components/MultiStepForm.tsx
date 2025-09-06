@@ -10,6 +10,8 @@ import SkillsPreferences from "./forms/SkillsPreferences";
 import EmergencyContact from "./forms/EmergencyContact";
 import { calculateAge } from "@/lib/helpers";
 import ReviewSubmit from "./forms/Review";
+import { Resolver } from "react-hook-form";
+
 
 export default function MultiStepForm() {
   const [step, setStep] = useState(1);
@@ -19,16 +21,12 @@ export default function MultiStepForm() {
   const fieldStartTimes = useRef<{ [key: string]: number | null }>({});
 
   const methods = useForm<FormSchemaType>({
-    resolver: zodResolver(formSchema) as any,
+    resolver: zodResolver(formSchema) as Resolver<FormSchemaType>,
     defaultValues: {
-      // fullName: "",
-      // email: "",
-      // phone: "",
-      // dob: "",
-      fullName: "John Doe",
-      email: "john@example.com",
-      phone: "+1-123-456-7890",
-      dob: "2004-01-01",
+      fullName: "",
+      email: "",
+      phone: "",
+      dob: "",
     },
     mode: "onTouched",
   });

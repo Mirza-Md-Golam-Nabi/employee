@@ -27,7 +27,8 @@ export const emergencyContact = z
   })
   .superRefine((data, ctx) => {
     // Guardian fields required if age < 21
-    const formDob = (ctx as any).parent?.dob;
+    const parent = (ctx as unknown as { parent?: { dob?: string } })?.parent;
+    const formDob = parent?.dob;
     if (!formDob) return;
 
     const birthDate = new Date(formDob);

@@ -71,9 +71,9 @@ export default function SkillsPreferences({onFocus, onBlur}: SkillsPreferencesPr
                   onBlur={() => onBlur(`experiences.${skill}`)}
                   className="mt-1 w-full border rounded-md p-2"
                 />
-                {(errors as any).experiences?.[skill] && (
+                {errors.experiences?.[skill] && (
                   <p className="text-red-500 text-sm">
-                    {String((errors as any).experiences?.[skill]?.message)}
+                    {String(errors.experiences?.[skill]?.message)}
                   </p>
                 )}
               </div>
