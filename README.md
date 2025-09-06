@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MultiStepForm Project
 
-## Getting Started
+This project is a **React + TypeScript + React Hook Form** multi-step form with Zod validation, field analytics, and keyboard navigation support.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## How to Run the Project
+
+1. **Clone the repository**
+
+```sh
+git clone https://github.com/Mirza-Md-Golam-Nabi/employee.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+And
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```sh
+cd employee
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. **Install dependencies**
 
-## Learn More
+```sh
+npm install
+```
 
-To learn more about Next.js, take a look at the following resources:
+3. **Run the development server**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```sh
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+4. **Open this URL in your browser**
 
-## Deploy on Vercel
+```sh
+http://localhost:3000
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+5. Fill out the form step by step.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Press Enter to move to the next step.
+- Use Tab to navigate between fields.
+- On the last step, confirm your information and submit.
+
+## Complex Logic Handling
+1. Multi-Step Validation
+- Each step validates only its relevant fields using React Hook Form’s trigger method.
+- handleNext function triggers validation and moves to the next step only if the current step is valid.
+- Keyboard Enter key triggers handleNext dynamically, respecting the current step.
+
+2. Field Analytics (Time Tracking)
+
+- I track how long the user spends on each field.
+- On each input field:
+  - onFocus stores the current timestamp.
+  - onBlur calculates the duration and adds it to a central fieldTimers object.
+- This helps measure user interaction and time spent on each input.
+
+3. Dynamic Form Handling
+
+- Each step is a separate component: **PersonalInfo**, **JobDetails**, **SkillsPreferences**, **EmergencyContact**, **ReviewSubmit**.
+- Parent component **MultiStepForm** passes **onFocus** and **onBlur** to child components as props.
+- Fields are grouped by step, allowing flexible validation and navigation.
+
+4. Keyboard Navigation
+
+- Tab navigation works naturally with HTML inputs.
+- Enter key triggers **handleNext** instead of submitting the form prematurely.
+
+5. Zod Validation
+
+- Complex validation logic handled via Zod schema.
+  - Full Name: at least 2 words.
+  - Phone: custom format validation.
+  - Date of Birth: must be at least 18 years old.
+
+- React Hook Form integrates with Zod using zodResolver.
+
+## Assumptions Made
+
+- Users must be at least 18 years old to submit the form.
+- Profile picture is optional and must be JPG or PNG with max size 2MB.
+- All steps must be completed in order; skipping is not allowed.
+- Keyboard Enter triggers “Next” for steps 1–4 and works globally across input fields.
+- Field analytics only tracks focus/blur durations and does not track partial edits.
+- Radio buttons and checkboxes are considered a single field for timing analytics (all options share one timer).
+
+## Notes
+
+- You can inspect field analytics in the console after submission.
+- Validation errors are displayed inline.
+- The ReviewSubmit step allows users to confirm all data before final submission.
