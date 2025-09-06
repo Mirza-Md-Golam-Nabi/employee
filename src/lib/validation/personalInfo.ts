@@ -21,6 +21,20 @@ export const personalInfo = z.object({
     .refine((val) => isAtLeast18(val) >= 18, {
       message: "You must be at least 18 years old",
     }),
+
+  profilePicture: z
+    .any()
+    .optional()
+    .refine(
+      (file) =>
+        !file ||
+        file?.[0]?.type === "image/jpeg" ||
+        file?.[0]?.type === "image/png",
+      { message: "Only JPG or PNG files are allowed" }
+    )
+    .refine((file) => !file || file?.[0]?.size <= 2 * 1024 * 1024, {
+      message: "Max file size is 2MB",
+    }),
 });
 
 export type PersonalInfoType = z.infer<typeof personalInfo>;

@@ -3,7 +3,12 @@ import { useFormContext } from "react-hook-form";
 import { JobDetailsType } from "@/lib/validation/jobDetails";
 import { DEPARTMENTS, JOB_TYPES, mockManagers } from "@/data/mockData";
 
-export default function JobDetails() {
+type JobDetailsProps = {
+  onFocus: (fieldName: string) => void;
+  onBlur: (fieldName: string) => void;
+};
+
+export default function JobDetails({ onFocus, onBlur }: JobDetailsProps) {
   const {
     register,
     watch,
@@ -30,6 +35,8 @@ export default function JobDetails() {
         </label>
         <select
           {...register("department")}
+          onFocus={() => onFocus("department")}
+          onBlur={() => onBlur("department")}
           className="mt-1 w-full border rounded-md p-2"
         >
           <option value="">Select Department</option>
@@ -57,6 +64,8 @@ export default function JobDetails() {
         <input
           id="jobTitle"
           {...register("jobTitle")}
+          onFocus={() => onFocus("jobTitle")}
+          onBlur={() => onBlur("jobTitle")}
           className="mt-1 w-full border rounded-md p-2"
           placeholder="Software Engineer"
         />
@@ -75,6 +84,8 @@ export default function JobDetails() {
         <input
           type="date"
           {...register("startDate")}
+          onFocus={() => onFocus("startDate")}
+          onBlur={() => onBlur("startDate")}
           className="mt-1 w-full border rounded-md p-2"
         />
         {errors.startDate && (
@@ -92,7 +103,13 @@ export default function JobDetails() {
         <div className="flex gap-4 mt-1">
           {JOB_TYPES.map((type) => (
             <label key={type}>
-              <input type="radio" value={type} {...register("jobType")} />{" "}
+              <input
+                type="radio"
+                value={type}
+                {...register("jobType")}
+                onFocus={() => onFocus("jobType")}
+                onBlur={() => onBlur("jobType")}
+              />{" "}
               {type}
             </label>
           ))}
@@ -111,6 +128,8 @@ export default function JobDetails() {
           <input
             type="number"
             {...register("salary", { valueAsNumber: true })}
+            onFocus={() => onFocus("salary")}
+            onBlur={() => onBlur("salary")}
             className="mt-1 w-full border rounded-md p-2"
             placeholder={jobType === "Full-time" ? "50000" : "100"}
           />
@@ -130,6 +149,8 @@ export default function JobDetails() {
           </label>
           <select
             {...register("manager")}
+            onFocus={() => onFocus("manager")}
+            onBlur={() => onBlur("manager")}
             className="mt-1 w-full border rounded-md p-2"
           >
             <option value="">Select Manager</option>

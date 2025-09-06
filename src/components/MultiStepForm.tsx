@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import PersonalInfo from "./forms/PersonalInfo";
@@ -14,6 +14,9 @@ import ReviewSubmit from "./forms/Review";
 export default function MultiStepForm() {
   const [step, setStep] = useState(1);
   const [confirmed, setConfirmed] = useState(false);
+
+  const fieldTimers = useRef<{ [key: string]: number }>({});
+  const fieldStartTimes = useRef<{ [key: string]: number | null }>({});
 
   const methods = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema) as any,
@@ -34,7 +37,7 @@ export default function MultiStepForm() {
   const age = calculateAge(dob);
 
   const fieldsByStep: Record<number, (keyof FormSchemaType)[]> = {
-    1: ["fullName", "email", "phone", "dob"],
+    1: ["fullName", "email", "phone", "dob", "profilePicture"],
     2: ["department", "jobTitle", "startDate", "jobType", "salary", "manager"],
     3: [
       "skills",
@@ -54,10 +57,25 @@ export default function MultiStepForm() {
   };
 
   const handleNext = async () => {
-    const isValid = await methods.trigger(fieldsByStep[step], {
+    const currentStep = step;
+    const isValid = await methods.trigger(fieldsByStep[currentStep], {
       shouldFocus: true,
     });
     if (isValid) setStep((prev) => prev + 1);
+  };
+
+  const handleFocus = (fieldName: string) => {
+    fieldStartTimes.current[fieldName] = Date.now();
+  };
+
+  const handleBlur = (fieldName: string) => {
+    const start = fieldStartTimes.current[fieldName];
+    if (start) {
+      const duration = Date.now() - start;
+      fieldTimers.current[fieldName] =
+        (fieldTimers.current[fieldName] || 0) + duration;
+      fieldStartTimes.current[fieldName] = null;
+    }
   };
 
   const onSubmit = methods.handleSubmit((data) => {
@@ -68,16 +86,36 @@ export default function MultiStepForm() {
         "Submission successful! Open the console to view the submitted data."
       );
       console.log("Final Submitted Data:", data);
+      console.log("Field Analytics:", fieldTimers.current);
     }
   });
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={onSubmit} className="max-w-2xl mx-auto p-6 space-y-6">
-        {step === 1 && <PersonalInfo />}
-        {step === 2 && <JobDetails />}
-        {step === 3 && <SkillsPreferences />}
-        {step === 4 && <EmergencyContact age={age} />}
+      <form
+        onSubmit={onSubmit}
+        onKeyDown={async (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            handleNext();
+          }
+        }}
+        className="max-w-2xl mx-auto p-6 space-y-6"
+      >
+        {step === 1 && (
+          <PersonalInfo onFocus={handleFocus} onBlur={handleBlur} />
+        )}
+        {step === 2 && <JobDetails onFocus={handleFocus} onBlur={handleBlur} />}
+        {step === 3 && (
+          <SkillsPreferences onFocus={handleFocus} onBlur={handleBlur} />
+        )}
+        {step === 4 && (
+          <EmergencyContact
+            age={age}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+          />
+        )}
         {step == 5 && (
           <ReviewSubmit confirmed={confirmed} setConfirmed={setConfirmed} />
         )}

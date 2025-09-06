@@ -32,6 +32,18 @@ export default function ReviewSubmit({
           <Field label="Email" value={data.email} />
           <Field label="Phone" value={data.phone} />
           <Field label="Date of Birth" value={data.dob} />
+          {data.profilePicture && data.profilePicture[0] && (
+            <div>
+              <span className="block text-sm font-medium text-gray-600">
+                Profile Picture
+              </span>
+              <img
+                src={URL.createObjectURL(data.profilePicture[0])}
+                alt="Profile Preview"
+                className="mt-1 h-24 w-24 rounded-full object-cover border"
+              />
+            </div>
+          )}
         </Section>
 
         <Section title="Job Details">

@@ -3,7 +3,12 @@ import { useFormContext } from "react-hook-form";
 import { skillsByDepartment } from "@/data/mockData";
 import { FormSchemaType } from "@/lib/validation/formSchema";
 
-export default function SkillsPreferences() {
+type SkillsPreferencesProps = {
+  onFocus: (fieldName: string) => void;
+  onBlur: (fieldName: string) => void;
+};
+
+export default function SkillsPreferences({onFocus, onBlur}: SkillsPreferencesProps) {
   const {
     register,
     watch,
@@ -33,6 +38,8 @@ export default function SkillsPreferences() {
                 type="checkbox"
                 value={skill}
                 {...register("skills")}
+                onFocus={() => onFocus("skills")}
+                onBlur={() => onBlur("skills")}
                 className="rounded border-gray-300"
               />
               <span>{skill}</span>
@@ -60,6 +67,8 @@ export default function SkillsPreferences() {
                   type="text"
                   placeholder="e.g. 2 years"
                   {...register(`experiences.${skill}`)}
+                  onFocus={() => onFocus(`experiences.${skill}`)}
+                  onBlur={() => onBlur(`experiences.${skill}`)}
                   className="mt-1 w-full border rounded-md p-2"
                 />
                 {(errors as any).experiences?.[skill] && (
@@ -86,6 +95,8 @@ export default function SkillsPreferences() {
             <input
               type="time"
               {...register("workingHours.start")}
+              onFocus={() => onFocus("workingHours.start")}
+              onBlur={() => onBlur("workingHours.start")}
               className={`w-full border rounded-md p-2 ${
                 errors.workingHours?.start
                   ? "border-red-500"
@@ -105,6 +116,8 @@ export default function SkillsPreferences() {
             <input
               type="time"
               {...register("workingHours.end")}
+              onFocus={() => onFocus("workingHours.end")}
+              onBlur={() => onBlur("workingHours.end")}
               className={`w-full border rounded-md p-2 ${
                 errors.workingHours?.end ? "border-red-500" : "border-gray-300"
               }`}
@@ -130,6 +143,8 @@ export default function SkillsPreferences() {
           max={100}
           step={10}
           {...register("remotePreference", { valueAsNumber: true })}
+          onFocus={() => onFocus("remotePreference")}
+          onBlur={() => onBlur("remotePreference")}
           className="w-full mt-2"
         />
       </div>
@@ -137,7 +152,12 @@ export default function SkillsPreferences() {
       {/* Manager Approved (only if > 50%) */}
       {remotePreference > 50 && (
         <div className="flex items-center space-x-2">
-          <input type="checkbox" {...register("managerApproved")} />
+          <input
+            type="checkbox"
+            {...register("managerApproved")}
+            onFocus={() => onFocus("managerApproved")}
+            onBlur={() => onBlur("managerApproved")}
+          />
           <span>Manager Approved</span>
           {errors.managerApproved && (
             <p className="text-red-500 text-sm">
@@ -154,6 +174,8 @@ export default function SkillsPreferences() {
         </label>
         <textarea
           {...register("extraNotes")}
+          onFocus={() => onFocus("extraNotes")}
+          onBlur={() => onBlur("extraNotes")}
           placeholder="Any extra notes (max 500 chars)"
           className="mt-1 w-full border rounded-md p-2"
         />

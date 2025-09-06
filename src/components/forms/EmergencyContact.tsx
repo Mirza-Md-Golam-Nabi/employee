@@ -5,7 +5,13 @@ import { useFormContext } from "react-hook-form";
 import { EmergencyContactType } from "@/lib/validation/emergencyContact";
 import { RELATIONSHIP } from "@/data/mockData";
 
-export default function EmergencyContact({ age }: { age: number }) {
+type EmergencyContactProps = {
+  age: number;
+  onFocus: (fieldName: string) => void;
+  onBlur: (fieldName: string) => void;
+};
+
+export default function EmergencyContact({ age, onFocus, onBlur }: EmergencyContactProps) {
   const {
     register,
     formState: { errors },
@@ -24,6 +30,8 @@ export default function EmergencyContact({ age }: { age: number }) {
         </label>
         <input
           {...register("contactName")}
+          onFocus={() => onFocus("contactName")}
+          onBlur={() => onBlur("contactName")}
           className="mt-1 w-full border rounded-md p-2"
           placeholder="John Doe"
         />
@@ -41,12 +49,14 @@ export default function EmergencyContact({ age }: { age: number }) {
         </label>
         <select
           {...register("relationship")}
+          onFocus={() => onFocus("relationship")}
+          onBlur={() => onBlur("relationship")}
           className="mt-1 w-full border rounded-md p-2"
         >
           <option value="">Select Relationship</option>
           {RELATIONSHIP.map((relation) => (
             <option key={relation} value={relation}>
-                {relation}
+              {relation}
             </option>
           ))}
         </select>
@@ -64,6 +74,8 @@ export default function EmergencyContact({ age }: { age: number }) {
         </label>
         <input
           {...register("contactPhone")}
+          onFocus={() => onFocus("contactPhone")}
+          onBlur={() => onBlur("contactPhone")}
           className="mt-1 w-full border rounded-md p-2"
           placeholder="+1-123-456-7890"
         />
@@ -83,6 +95,8 @@ export default function EmergencyContact({ age }: { age: number }) {
             </label>
             <input
               {...register("guardianName")}
+              onFocus={() => onFocus("guardianName")}
+              onBlur={() => onBlur("guardianName")}
               className="mt-1 w-full border rounded-md p-2"
               placeholder="Parent/Guardian Name"
             />
@@ -99,6 +113,8 @@ export default function EmergencyContact({ age }: { age: number }) {
             </label>
             <input
               {...register("guardianPhone")}
+              onFocus={() => onFocus("guardianPhone")}
+              onBlur={() => onBlur("guardianPhone")}
               className="mt-1 w-full border rounded-md p-2"
               placeholder="+1-123-456-7890"
             />
